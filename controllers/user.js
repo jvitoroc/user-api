@@ -18,9 +18,11 @@ module.exports = {
                     expiration_date: Date.now() + Number(expirationTime)
                 };
                 var token = jwt.encode(payload, jwtSecret);
+                res.status(202);
                 res.json({message: "Authenticated", token: token});
             })
             .catch((err)=>{
+                res.status(401);
                 res.json({message: "Not authenticated", error: err});
             })
     },
@@ -41,9 +43,11 @@ module.exports = {
                     .catch((err)=>{
                         //console.log("not sent", err);
                     });
+                res.status(201);
                 res.json({message: 'User created'});
             })
             .catch((err)=>{
+                res.status(500);
                 res.json({message: 'User not created', error: err});
             });
     },
@@ -54,6 +58,7 @@ module.exports = {
             try{
                 id = jwt.decode(req.params.token, jwtSecret).id;
             }catch(e){
+                res.status(400);
                 res.json({message: 'Invalid token', error: e});
                 return;
             }
@@ -63,6 +68,7 @@ module.exports = {
                     res.json({message: `The account ${user.username} was activated`});
                 })
                 .catch((err)=>{
+                    res.status(500);
                     res.json({message: 'An error occurred trying to activate the user', error: err});
                 });
         }
