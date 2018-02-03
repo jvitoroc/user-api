@@ -13,15 +13,16 @@ module.exports = {
 
         User.authenticate(username, password)
             .then((userId)=>{
-                var payload = {
+                let payload = {
                     id: userId,
                     expiration_date: Date.now() + Number(expirationTime)
                 };
-                var token = jwt.encode(payload, jwtSecret);
+                let token = jwt.encode(payload, jwtSecret);
                 res.status(202);
                 res.json({message: "Authenticated", token: token});
             })
             .catch((err)=>{
+                console.log(err);
                 res.status(401);
                 res.json({message: "Not authenticated", error: err});
             })

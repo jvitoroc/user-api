@@ -11,6 +11,7 @@ const jwt = require("jwt-simple");
 const _ = require("lodash");
 
 const user = require("./controllers/user");
+const todo = require("./controllers/todo");
 
 mongoose.connect('todoapp', '27017')
     .then(()=>{
@@ -36,6 +37,14 @@ app.get("/", function(req, res) {
 app.post("/login", user.login);
 app.post("/create", user.create);
 app.get("/activate/:token", user.activate);
+
+// Todo routes
+app.post("/todo", passport.authenticate('jwt', { session: false }),
+        todo.create);
+app.patch("/todo/:id", passport.authenticate('jwt', { session: false }),
+        todo.update);
+app.delete("/todo/:id", passport.authenticate('jwt', { session: false }),
+        todo.delete);
 
 app.get("/secret", passport.authenticate('jwt', { session: false }), function(req, res){
     res.json("Success! You can not see this without a token");
